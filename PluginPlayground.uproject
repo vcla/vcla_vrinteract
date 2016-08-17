@@ -1,0 +1,27 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "4.12",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "PluginPlayground",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine"
+			]
+		},
+		{
+			"Name": "KinectVCLA",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "LeapMotion",
+			"Enabled": true
+		}
+	]
+}
