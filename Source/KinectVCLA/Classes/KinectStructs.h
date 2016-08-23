@@ -81,9 +81,9 @@ public:
 
 	FKinectBone& operator = (const FKinectBone& Other);
 
-
+	/** The joint type start */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Kinect")
-		TEnumAsByte<EJoint::Type> JointTypeStart;   ///< The joint type start
+		TEnumAsByte<EJoint::Type> JointTypeStart;   
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Kinect")
 		TEnumAsByte<EJoint::Type> JointTypeEnd; ///< The joint type end
 

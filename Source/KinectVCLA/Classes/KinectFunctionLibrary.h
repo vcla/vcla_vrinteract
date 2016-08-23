@@ -15,15 +15,14 @@ public:
 	static void StopSensor();
 
 	static TMap<TEnumAsByte<EJoint::Type>, TEnumAsByte<EJoint::Type>> BoneMap;
-	static TMap<TEnumAsByte<EJoint::Type>, FTransform> GlobalBoneTransformMap;
 	static bool UpdateBody();
 
-	static void UpdateGlobalBoneOrientation(TEnumAsByte<EJoint::Type> BoneParentJoint, FQuat ParentOrientation);
+	//static void UpdateGlobalBoneOrientation(TEnumAsByte<EJoint::Type> BoneParentJoint, FQuat ParentOrientation);
 
 	static FBody MyBody;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Kinect")
-		static FTransform GetLocalJointTransform(EJoint::Type JointType);
+		static FTransform GetWorldJointTransform(EJoint::Type JointType);
 
 private:
 	//static TSharedPtr<FKinectSensor> KinectSensor;

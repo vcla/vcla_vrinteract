@@ -1,8 +1,6 @@
 #include "KinectVCLAPrivatePCH.h"
 
-//TSharedPtr<FKinectSensor> UKinectFunctionLibrary::KinectSensor = TSharedPtr<FKinectSensor>(new FKinectSensor());
 TMap<TEnumAsByte<EJoint::Type>, TEnumAsByte<EJoint::Type>> UKinectFunctionLibrary::BoneMap;
-TMap<TEnumAsByte<EJoint::Type>, FTransform> UKinectFunctionLibrary::GlobalBoneTransformMap;
 FBody UKinectFunctionLibrary::MyBody;
 
 UKinectFunctionLibrary::UKinectFunctionLibrary(const class FObjectInitializer& PCIP)
@@ -34,13 +32,13 @@ UKinectFunctionLibrary::UKinectFunctionLibrary(const class FObjectInitializer& P
 	BoneMap.Add(EJoint::JointType_HandTipRight, EJoint::JointType_HandRight);
 	BoneMap.Add(EJoint::JointType_ThumbRight, EJoint::JointType_HandRight);
 
-	TArray<TEnumAsByte<EJoint::Type>> BoneArray;
-	BoneMap.GenerateKeyArray(BoneArray);
+	//TArray<TEnumAsByte<EJoint::Type>> BoneArray;
+	//BoneMap.GenerateKeyArray(BoneArray);
 
-	for (auto bone : BoneArray)
-	{
-		GlobalBoneTransformMap.Add(bone, FTransform());
-	}
+	//for (auto bone : BoneArray)
+	//{
+	//	GlobalBoneTransformMap.Add(bone, FTransform());
+	//}
 }
 
 void UKinectFunctionLibrary::StartSensor()
@@ -86,28 +84,28 @@ bool UKinectFunctionLibrary::UpdateBody()
 	return false;
 }
 
-void UKinectFunctionLibrary::UpdateGlobalBoneOrientation(TEnumAsByte<EJoint::Type> BoneParentJoint, FQuat ParentOrientation)
-{
+//void UKinectFunctionLibrary::UpdateGlobalBoneOrientation(TEnumAsByte<EJoint::Type> BoneParentJoint, FQuat ParentOrientation)
+//{
+//
+//	FKinectBone Bone = MyBody.KinectBones[BoneParentJoint];
+//	if (GlobalBoneTransformMap.Contains(Bone.JointTypeEnd))
+//	{
+//		return;
+//	}
+//	else
+//	{
+//		FTransform Result;
+//		Result.SetRotation(Bone.JointTransform.GetRotation() * ParentOrientation);
+//		Result.SetTranslation(Bone.JointTransform.GetTranslation());
+//		GlobalBoneTransformMap.Add(Bone.JointTypeEnd, Result);
+//		for (auto ChildBone : Bone.Children)
+//		{
+//			UpdateGlobalBoneOrientation(ChildBone, Result.GetRotation());
+//		}
+//	}
+//}
 
-	FKinectBone Bone = MyBody.KinectBones[BoneParentJoint];
-	if (GlobalBoneTransformMap.Contains(Bone.JointTypeEnd))
-	{
-		return;
-	}
-	else
-	{
-		FTransform Result;
-		Result.SetRotation(Bone.JointTransform.GetRotation() * ParentOrientation);
-		Result.SetTranslation(Bone.JointTransform.GetTranslation());
-		GlobalBoneTransformMap.Add(Bone.JointTypeEnd, Result);
-		for (auto ChildBone : Bone.Children)
-		{
-			UpdateGlobalBoneOrientation(ChildBone, Result.GetRotation());
-		}
-	}
-}
-
-FTransform UKinectFunctionLibrary::GetLocalJointTransform(EJoint::Type JointType)
+FTransform UKinectFunctionLibrary::GetWorldJointTransform(EJoint::Type JointType)
 {
 	if (MyBody.KinectBones.Num() > 0)
 	{

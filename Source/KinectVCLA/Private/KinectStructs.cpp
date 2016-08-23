@@ -20,7 +20,7 @@ FKinectBone::FKinectBone(const JointOrientation& jointOrientation, const Joint& 
 		jointOrientation.Orientation.z,
 		jointOrientation.Orientation.w);
 
-	FVector UETranslation = FVector(-CameraSpacePoint.Z, CameraSpacePoint.X, CameraSpacePoint.Y);
+	FVector UETranslation = FVector(-CameraSpacePoint.Z, CameraSpacePoint.X, CameraSpacePoint.Y) * 100;
 	FQuat UERotation = FQuat(-Orientation.Z, Orientation.X, Orientation.Y, -Orientation.W);// *FRotator(0.f, 0.f, 0.f).Quaternion();
 
 	JointTransform.SetRotation(UERotation);
