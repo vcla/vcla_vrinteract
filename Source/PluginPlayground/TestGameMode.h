@@ -14,6 +14,8 @@ class PLUGINPLAYGROUND_API ATestGameMode : public AGameMode
 	GENERATED_BODY()
 
 public:
+	ATestGameMode();
+
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Tick(float DeltaSeconds) override;

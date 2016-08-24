@@ -4,6 +4,12 @@
 #include "TestGameMode.h"
 
 #include "KinectFunctionLibrary.h"
+#include "VRPawn.h"
+
+ATestGameMode::ATestGameMode()
+{
+	DefaultPawnClass = AVRPawn::StaticClass();
+}
 
 void ATestGameMode::BeginPlay()
 {

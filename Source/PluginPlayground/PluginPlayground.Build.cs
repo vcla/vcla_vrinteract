@@ -6,7 +6,7 @@ public class PluginPlayground : ModuleRules
 {
 	public PluginPlayground(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "KinectVCLA" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "KinectVCLA", "HeadMountedDisplay" });
 
         //PrivateDependencyModuleNames.AddRange(new string[] { "KinectVCLA" });
 

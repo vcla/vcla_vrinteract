@@ -4,7 +4,10 @@
 
 #include "Animation/AnimInstance.h"
 #include "KinectStructs.h"
+#include "VRPawn.h"
 #include "KinectAnimInstance.generated.h"
+
+
 
 /**
  * 
@@ -22,11 +25,16 @@ public:
 
 	virtual void NativeUpdateAnimation(float DeltaTimeX) override;
 
+	AVRPawn* OwningPawn;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Kinect")
 		FRotator HipsSkeletalComponentOffset;
+
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Kinect")
 		FTransform GetJointOrientation(EJoint::Type JointType);
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Avateering")
+		FTransform GetConvertedRotation(FName BoneName);
 
 };

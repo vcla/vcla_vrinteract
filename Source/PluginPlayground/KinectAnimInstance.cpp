@@ -8,6 +8,8 @@ void UKinectAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
+	OwningPawn = Cast<AVRPawn>(TryGetPawnOwner());
+
 	//TArray<TEnumAsByte<EJoint::Type>> BoneArray;
 	//UKinectFunctionLibrary::BoneMap.GenerateKeyArray(BoneArray);
 	//for (auto bone : BoneArray)
@@ -34,11 +36,11 @@ FTransform UKinectAnimInstance::GetJointOrientation(EJoint::Type JointType)
 	//Result.SetRotation(Result.GetRotation() * HipsSkeletalComponentOffset.Quaternion());
 	//return Result;
 	return UKinectFunctionLibrary::MyBody.KinectBones[JointType].JointTransform;
-	if (UKinectFunctionLibrary::GlobalBoneTransformMap.Contains(JointType))
-	{
-		return UKinectFunctionLibrary::GlobalBoneTransformMap[JointType];
-	}
-	return FTransform();
+	//if (UKinectFunctionLibrary::GlobalBoneTransformMap.Contains(JointType))
+	//{
+	//	return UKinectFunctionLibrary::GlobalBoneTransformMap[JointType];
+	//}
+	//return FTransform();
 	//FTransform Result = UKinectFunctionLibrary::MyBody.KinectBones[JointType].JointTransform;
 	//Result.SetRotation(UKinectFunctionLibrary::GlobalBoneTransformMap[JointType]);
 	//for (auto bone : AnimBody.KinectBones)
@@ -51,4 +53,13 @@ FTransform UKinectAnimInstance::GetJointOrientation(EJoint::Type JointType)
 	//	}
 	//}
 	//return Result;
+}
+
+FTransform UKinectAnimInstance::GetConvertedRotation(FName BoneName)
+{
+	if (OwningPawn)
+	{
+		return OwningPawn->GetConvertedRotation(BoneName);
+	}
+	return FTransform();
 }
