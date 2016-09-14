@@ -6,15 +6,15 @@ public class PluginPlayground : ModuleRules
 {
 	public PluginPlayground(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "KinectVCLA", "HeadMountedDisplay" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "KinectVCLA", "HeadMountedDisplay", "LeapMotion" });
 
         //PrivateDependencyModuleNames.AddRange(new string[] { "KinectVCLA" });
 
-        PublicIncludePathModuleNames.AddRange(new string[] { "KinectVCLA" });
+        PublicIncludePathModuleNames.AddRange(new string[] { "KinectVCLA", "LeapMotion" });
        // DynamicallyLoadedModuleNames.Add("KinectVCLA");
 
 
-        PublicIncludePaths.AddRange(new string[] { "KinectVCLA/Classes" });
+        PublicIncludePaths.AddRange(new string[] { "KinectVCLA/Classes", "LeapMotion/Public" });
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

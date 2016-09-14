@@ -20,11 +20,15 @@ AVRPawn::AVRPawn()
 	HeadOffset = CreateDefaultSubobject<USceneComponent>(TEXT("HeadOffset"));
 	CameraView = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
+	LeapController = CreateDefaultSubobject<ULeapController>(TEXT("LeapController"));
+
 	BodyMesh->SetupAttachment(RootComponent);
 
 	HeadOffset->SetupAttachment(RootComponent);
 	CameraView->SetupAttachment(HeadOffset);
 	HeadMesh->SetupAttachment(CameraView);
+
+	AddOwnedComponent(LeapController);
 }
 
 // Called when the game starts or when spawned
@@ -65,6 +69,11 @@ void AVRPawn::CalibratePawn()
 
 	KinectNeutralOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase);
 	BodyMesh->SetRelativeLocation(FVector(0, 0, 0));
+
+	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
+	{
+		LeapController->OptimizeForHMD(true, true, true);
+	}
 
 	//HeadOffset->SetRelativeRotation(UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_Neck).GetRotation());
 }

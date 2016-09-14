@@ -4,6 +4,9 @@
 
 #include "GameFramework/Pawn.h"
 #include "KinectStructs.h"
+#include "LeapController.h"
+#include "LeapEnums.h"
+#include "LeapEventInterface.h"
 #include "VRPawn.generated.h"
 
 
@@ -23,7 +26,7 @@ struct FAvatarBoneInfo
 };
 
 UCLASS()
-class PLUGINPLAYGROUND_API AVRPawn : public APawn
+class PLUGINPLAYGROUND_API AVRPawn : public APawn, public ILeapEventInterface
 {
 	GENERATED_BODY()
 
@@ -59,6 +62,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
 	UCameraComponent* CameraView;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+	ULeapController* LeapController;
 
 private:
 	//Distance between Kinect and user's hips when in neutral calibration pose
