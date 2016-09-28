@@ -26,6 +26,9 @@ void ATestGameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+
+	UKinectFunctionLibrary::UpdateBody();
+
 	//UKinectFunctionLibrary::TestKinect();
 }
 

@@ -5,6 +5,7 @@
 #include "Animation/AnimInstance.h"
 #include "KinectStructs.h"
 #include "VRPawn.h"
+#include "HandObject.h"
 #include "KinectAnimInstance.generated.h"
 
 
@@ -20,6 +21,7 @@ class PLUGINPLAYGROUND_API UKinectAnimInstance : public UAnimInstance
 public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Kinect)
 	//TMap<TEnumAsByte<EJoint::Type>, FTransform> BoneTransformMap;
+	//UKinectAnimInstance(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeInitializeAnimation() override;
 
@@ -37,4 +39,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Avateering")
 		FTransform GetConvertedRotation(FName BoneName);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
+		UHandObject* LeftHandAnim;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
+		UHandObject* RightHandAnim;
 };

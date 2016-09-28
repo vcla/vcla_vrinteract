@@ -3,12 +3,19 @@
 #include "PluginPlayground.h"
 #include "KinectFunctionLibrary.h"
 #include "KinectAnimInstance.h"
+//
+//UKinectAnimInstance::UKinectAnimInstance(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+//{
+//	LeftHandAnim = NewObject<UHandObject>();
+//}
 
 void UKinectAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
 	OwningPawn = Cast<AVRPawn>(TryGetPawnOwner());
+	LeftHandAnim = NewObject<UHandObject>();
+	RightHandAnim = NewObject<UHandObject>();
 
 	//TArray<TEnumAsByte<EJoint::Type>> BoneArray;
 	//UKinectFunctionLibrary::BoneMap.GenerateKeyArray(BoneArray);
@@ -22,7 +29,11 @@ void UKinectAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 {
 	Super::NativeUpdateAnimation(DeltaTimeX);
 
-	UKinectFunctionLibrary::UpdateBody();
+	if (OwningPawn)
+	{
+		LeftHandAnim->CopyHand(OwningPawn->LeftHand);
+		RightHandAnim->CopyHand(OwningPawn->RightHand);
+	}
 	
 		//UE_LOG(LogTemp, Warning, TEXT("Updating Global Bone Transform"));
 		//UKinectFunctionLibrary::GlobalBoneTransformMap.Empty();

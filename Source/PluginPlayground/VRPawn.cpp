@@ -21,6 +21,8 @@ AVRPawn::AVRPawn()
 	CameraView = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
 	LeapController = CreateDefaultSubobject<ULeapController>(TEXT("LeapController"));
+	LeftHand = CreateDefaultSubobject<UHandObject>(TEXT("LeftHand"));
+	RightHand = CreateDefaultSubobject<UHandObject>(TEXT("RightHand"));
 
 	BodyMesh->SetupAttachment(RootComponent);
 
@@ -29,6 +31,10 @@ AVRPawn::AVRPawn()
 	HeadMesh->SetupAttachment(CameraView);
 
 	AddOwnedComponent(LeapController);
+
+	LeftHandNeutralOffset = FRotator(1, 1, 1);
+	RightHandNeutralOffset = FRotator(1, 1, 1);
+
 }
 
 // Called when the game starts or when spawned
@@ -42,6 +48,8 @@ void AVRPawn::BeginPlay()
 		BoneInfoMap.Add(BoneInfo.AvatarBoneName, BoneInfo);
 	}
 
+	LeftHand->NeutralBoneOrientation = LeftHandNeutralOffset;
+	RightHand->NeutralBoneOrientation = RightHandNeutralOffset;
 
 	CalibratePawn();
 }
@@ -62,6 +70,18 @@ void AVRPawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 
 	InputComponent->BindAction("Calibrate", EInputEvent::IE_Pressed, this, &AVRPawn::CalibratePawn);
 }
+//
+//void AVRPawn::LeapHandMoved_Implementation(ULeapHand* hand)
+//{
+//	
+//	ILeapEventInterface* einterface = Cast<ILeapEventInterface>(this);
+//	if (einterface)
+//	{
+//		//FString LogString = einterface->ToString();
+//		//UE_LOG(LogTemp, Warning, TEXT("%s"), *LogString);
+//	}
+//	
+//}
 
 void AVRPawn::CalibratePawn()
 {

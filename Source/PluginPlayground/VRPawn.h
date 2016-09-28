@@ -7,6 +7,7 @@
 #include "LeapController.h"
 #include "LeapEnums.h"
 #include "LeapEventInterface.h"
+#include "HandObject.h"
 #include "VRPawn.generated.h"
 
 
@@ -43,6 +44,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
+	//virtual void LeapHandMoved_Implementation(ULeapHand* hand) override;
+
 	// Sets Pawn's internal values based on the user's current real world position
 	void CalibratePawn();
 
@@ -65,6 +68,18 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
 	ULeapController* LeapController;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
+		UHandObject* LeftHand;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
+		FRotator LeftHandNeutralOffset;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
+		UHandObject* RightHand;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
+		FRotator RightHandNeutralOffset;
 
 private:
 	//Distance between Kinect and user's hips when in neutral calibration pose
