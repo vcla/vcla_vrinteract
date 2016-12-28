@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PluginPlayground.h"
+#include "HeadMountedDisplay.h"
 #include "HandObject.h"
 #include "LeapBone.h"
 
@@ -8,6 +9,7 @@
 UHandObject::UHandObject()
 {
 	NeutralBoneOrientation = FRotator(0, 0, 0);
+	HandLocation = FVector(0, 0, 0);
 	//MyHandType = LeapHandType::HAND_UNKNOWN;
 
 	Thumb = FFingerStruct();
@@ -18,6 +20,8 @@ UHandObject::UHandObject()
 
 	Arm = FBoneStruct();
 	Palm = FBoneStruct();
+
+	Confidence = 0;
 }
 
 void UHandObject::CopyHand(UHandObject* OtherHand)
@@ -37,9 +41,19 @@ void UHandObject::CopyHand(UHandObject* OtherHand)
 void UHandObject::UpdateFromLeapHand(ULeapHand* LeapHand)
 {
 	LeapHandType MyHandType = LeapHand->HandType;
+	Confidence = LeapHand->Confidence;
 
 	Arm.BoneOrientation = ConvertRotator(LeapHand->Arm->GetOrientation(MyHandType));
 	Palm.BoneOrientation = ConvertRotator(LeapHand->PalmOrientation);
+
+	FRotator HeadRotation;
+	FVector HeadLocation;
+	
+	UHeadMountedDisplayFunctionLibrary::GetOrientationAndPosition(HeadRotation, HeadLocation);
+	//FTransform HeadTransform = FTransform(HeadRotation, HeadLocation + HeadRotation.RotateVector(FVector(1, 0, 0)), FVector(1, 1, 1));
+
+	//HandLocation = HeadTransform.InverseTransformVector(LeapHand->WristPosition*0.1);
+	HandLocation = (LeapHand->WristPosition*0.1) + HeadLocation + HeadRotation.RotateVector(FVector(8, 0, 0)); //Hack to account for leap plugin not adding position offset for wrist
 
 	//Fingers
 	ULeapFingerList* Fingers = LeapHand->Fingers();

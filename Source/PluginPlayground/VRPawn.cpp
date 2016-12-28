@@ -93,6 +93,7 @@ void AVRPawn::CalibratePawn()
 	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
 	{
 		LeapController->OptimizeForHMD(true, true, true);
+		LeapController->SetLeapMountToHMDOffset(FVector(9.f, 0, 0));
 	}
 
 	//HeadOffset->SetRelativeRotation(UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_Neck).GetRotation());

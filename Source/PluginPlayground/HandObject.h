@@ -15,6 +15,7 @@ struct PLUGINPLAYGROUND_API FBoneStruct
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
 		FRotator BoneOrientation;
 
+
 	FBoneStruct()
 	{
 		BoneOrientation = FRotator(5, 0, 0);
@@ -77,6 +78,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
 	FBoneStruct Palm;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
+		FVector HandLocation;
+
 	UFUNCTION(BlueprintCallable, Category = "Avateering")
 		void UpdateFromLeapHand(ULeapHand* Hand);
 	
@@ -85,4 +89,7 @@ public:
 	void UpdateFingerFromLeap(FFingerStruct& FingerStruct, ULeapFinger* LeapFinger, LeapHandType HandType);
 
 	FRotator ConvertRotator(FRotator OtherRotator);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Avateering")
+	float Confidence;
 };
