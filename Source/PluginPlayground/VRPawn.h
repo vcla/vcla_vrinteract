@@ -19,6 +19,7 @@ struct FAvatarBoneInfo
 		UPROPERTY(EditDefaultsOnly, Category = "AvatarBoneInfo")
 		FName AvatarBoneName = FName();
 
+	//Specific to a particular skeletal mesh, must be updated
 	UPROPERTY(EditDefaultsOnly, Category = "AvatarBoneInfo")
 		FRotator NeutralBoneRotation = FRotator();
 
@@ -49,7 +50,8 @@ public:
 	// Sets Pawn's internal values based on the user's current real world position
 	void CalibratePawn();
 
-	FTransform GetConvertedRotation(FName BoneName);
+	//Avateering functions and properties
+	FTransform GetConvertedTransform(FName BoneName);
 
 	UPROPERTY(EditAnywhere, Category = "Avateering")
 		TArray<FAvatarBoneInfo> BoneInfoArray;
@@ -81,6 +83,20 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
 		FRotator RightHandNeutralOffset;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
+		float GrabThreshold;
+
+	//Interaction functions and properties
+
+	UInteractableBaseComponent* RightHandObject;
+	UInteractableBaseComponent* LeftHandObject;
+
+	void Grab(UHandObject* GrabbingHand);
+	void Release(UHandObject* ReleasingHand);
+
+	void FireGrabEvents(UHandObject* Hand);
+
+	void UpdateAnimVariables();
 private:
 	//Distance between Kinect and user's hips when in neutral calibration pose
 	FTransform KinectNeutralOffset;

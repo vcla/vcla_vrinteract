@@ -92,4 +92,10 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Avateering")
 	float Confidence;
+
+	float PreviousGrabStrength;
+	float CurrentGrabStrength;
+
+	FVector GrabCenter;
+
 };

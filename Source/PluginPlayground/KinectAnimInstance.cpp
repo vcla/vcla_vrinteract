@@ -70,7 +70,7 @@ FTransform UKinectAnimInstance::GetConvertedRotation(FName BoneName)
 {
 	if (OwningPawn)
 	{
-		return OwningPawn->GetConvertedRotation(BoneName);
+		return OwningPawn->GetConvertedTransform(BoneName);
 	}
 	return FTransform();
 }

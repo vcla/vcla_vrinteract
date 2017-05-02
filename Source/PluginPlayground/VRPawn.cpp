@@ -2,6 +2,7 @@
 
 #include "PluginPlayground.h"
 #include "VRPawn.h"
+#include "VRAnimInstance.h"
 #include "HeadMountedDisplay.h"
 #include "KinectFunctionLibrary.h"
 
@@ -35,6 +36,7 @@ AVRPawn::AVRPawn()
 	LeftHandNeutralOffset = FRotator(1, 1, 1);
 	RightHandNeutralOffset = FRotator(1, 1, 1);
 
+	GrabThreshold = 0.4;
 }
 
 // Called when the game starts or when spawned
@@ -61,6 +63,11 @@ void AVRPawn::Tick( float DeltaTime )
 
 	FVector HipsTranslationOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).GetTranslation() - KinectNeutralOffset.GetTranslation();
 	BodyMesh->SetRelativeLocation(HipsTranslationOffset);
+
+	FireGrabEvents(LeftHand);
+	FireGrabEvents(RightHand);
+
+	UpdateAnimVariables();
 }
 
 // Called to bind functionality to input
@@ -99,7 +106,7 @@ void AVRPawn::CalibratePawn()
 	//HeadOffset->SetRelativeRotation(UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_Neck).GetRotation());
 }
 
-FTransform AVRPawn::GetConvertedRotation(FName BoneName)
+FTransform AVRPawn::GetConvertedTransform(FName BoneName)
 {
 	FAvatarBoneInfo* Info = BoneInfoMap.Find(BoneName);
 	FTransform Result = FTransform();
@@ -109,4 +116,77 @@ FTransform AVRPawn::GetConvertedRotation(FName BoneName)
 		Result.ConcatenateRotation(Info->NeutralBoneRotation.Quaternion());
 	}
 	return Result;
+}
+
+void AVRPawn::Grab(UHandObject* GrabbingHand)
+{
+	//setup grab trace parameters
+	FCollisionObjectQueryParams ObjectParams(CAN_GRAB_OBJECT);
+	FCollisionShape GrabRegion = FCollisionShape::MakeSphere(5.f);
+	GetWorld()->DebugDrawTraceTag = FName("GrabTag");
+	FCollisionQueryParams GrabCollisionParams;
+	GrabCollisionParams.TraceTag = FName("GrabTag");
+
+	TArray<FOverlapResult> OverlapResults;
+	FVector WorldGrabCenter = BodyMesh->GetComponentTransform().TransformVector(GrabbingHand->GrabCenter + HeadOffset->RelativeLocation);
+	GetWorld()->OverlapMultiByObjectType(OverlapResults, WorldGrabCenter, FQuat(0, 0, 0, 1), ObjectParams, GrabRegion, GrabCollisionParams);
+
+	UE_LOG(LogTemp, Warning, TEXT("BodyMesh Location: %s"), *BodyMesh->GetComponentLocation().ToString());
+	UE_LOG(LogTemp, Warning, TEXT("GrabCenter: %s"), *WorldGrabCenter.ToString());
+
+	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
+}
+
+void AVRPawn::Release(UHandObject* ReleasingHand)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Releasing"));
+}
+
+void AVRPawn::FireGrabEvents(UHandObject * Hand)
+{
+	if (Hand->CurrentGrabStrength > GrabThreshold)
+	{
+		if (Hand->PreviousGrabStrength <= GrabThreshold)
+		{
+			Grab(Hand);
+		}
+	}
+	else
+	{
+		if (Hand->PreviousGrabStrength > GrabThreshold)
+		{
+			Release(Hand);
+		}
+	}
+}
+
+void AVRPawn::UpdateAnimVariables()
+{
+	if (!BodyMesh)
+	{
+		return;
+	}
+
+	UVRAnimInstance* MyInstance = Cast<UVRAnimInstance>(BodyMesh->GetAnimInstance());
+
+	if (!MyInstance)
+	{
+		return;
+	}
+
+	MyInstance->ThumbProxLeft = LeftHand->Thumb.Proximal.BoneOrientation;
+	MyInstance->ThumbInterLeft = LeftHand->Thumb.Intermediate.BoneOrientation;
+	MyInstance->ThumbDistLeft = LeftHand->Thumb.Distal.BoneOrientation;
+	MyInstance->IndexProxLeft = LeftHand->Index.Proximal.BoneOrientation;
+	MyInstance->IndexInterLeft = LeftHand->Index.Intermediate.BoneOrientation;
+	MyInstance->IndexDistLeft = LeftHand->Index.Distal.BoneOrientation;
+	MyInstance->MiddleProxLeft = LeftHand->Middle.Proximal.BoneOrientation;
+	MyInstance->MiddleInterLeft = LeftHand->Middle.Intermediate.BoneOrientation;
+	MyInstance->MiddleDistLeft = LeftHand->Middle.Distal.BoneOrientation;
+	MyInstance->RingProxLeft = LeftHand->Ring.Proximal.BoneOrientation;
+	MyInstance->RingInterLeft = LeftHand->Ring.Intermediate.BoneOrientation;
+	MyInstance->RingDistLeft = LeftHand->Ring.Distal.BoneOrientation;
+	MyInstance->PinkyProxLeft = LeftHand->Pinky.Proximal.BoneOrientation;
+	MyInstance->PinkyInterLeft = LeftHand->Pinky.Intermediate.BoneOrientation;
+	MyInstance->PinkyDistLeft = LeftHand->Pinky.Distal.BoneOrientation;
 }

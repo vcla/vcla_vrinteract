@@ -18,17 +18,20 @@ void UVRAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 	if (OwningPawn)
 	{
 		//Set most of main body from Kinect
-		SpineBase = OwningPawn->GetConvertedRotation(FName("pelvis")).Rotator();// UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).Rotator();
-		SpineMid = OwningPawn->GetConvertedRotation(FName("spine_02")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineMid).Rotator();
-		SpineTop = OwningPawn->GetConvertedRotation(FName("spine_03")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineShoulder).Rotator();
-		ShoulderLeft = OwningPawn->GetConvertedRotation(FName("upperarm_l")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_ShoulderLeft).Rotator();
-		ShoulderRight = OwningPawn->GetConvertedRotation(FName("upperarm_r")).Rotator();
-		HipLeft = OwningPawn->GetConvertedRotation(FName("thigh_l")).Rotator();
-		KneeLeft = OwningPawn->GetConvertedRotation(FName("calf_l")).Rotator();
-		FootLeft = OwningPawn->GetConvertedRotation(FName("foot_l")).Rotator();
-		HipRight = OwningPawn->GetConvertedRotation(FName("thigh_r")).Rotator();
-		KneeRight = OwningPawn->GetConvertedRotation(FName("calf_r")).Rotator();
-		FootRight = OwningPawn->GetConvertedRotation(FName("foot_r")).Rotator();
+		SpineBase = OwningPawn->GetConvertedTransform(FName("pelvis")).Rotator();// UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).Rotator();
+		SpineMid = OwningPawn->GetConvertedTransform(FName("spine_02")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineMid).Rotator();
+		SpineTop = OwningPawn->GetConvertedTransform(FName("spine_03")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineShoulder).Rotator();
+		ShoulderLeft = OwningPawn->GetConvertedTransform(FName("upperarm_l")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_ShoulderLeft).Rotator();
+		ShoulderRight = OwningPawn->GetConvertedTransform(FName("upperarm_r")).Rotator();
+		HipLeft = OwningPawn->GetConvertedTransform(FName("thigh_l")).Rotator();
+		KneeLeft = OwningPawn->GetConvertedTransform(FName("calf_l")).Rotator();
+		FootLeft = OwningPawn->GetConvertedTransform(FName("foot_l")).Rotator();
+		HipRight = OwningPawn->GetConvertedTransform(FName("thigh_r")).Rotator();
+		KneeRight = OwningPawn->GetConvertedTransform(FName("calf_r")).Rotator();
+		FootRight = OwningPawn->GetConvertedTransform(FName("foot_r")).Rotator();
+
+		LeftElbowLocation = OwningPawn->GetConvertedTransform(FName("lowerarm_l")).GetLocation();
+		RightElbowLocation = OwningPawn->GetConvertedTransform(FName("lowerarm_r")).GetLocation();
 		//Elbow and wrist set from Leap or Kinect depending on tracking status
 		if (OwningPawn->LeftHand->Confidence > 0.1)
 		{
@@ -40,7 +43,7 @@ void UVRAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 			WristLeft = OwningPawn->LeftHand->Palm.BoneOrientation;
 
 			//Set fingers from Leap only
-			ThumbProxLeft = OwningPawn->LeftHand->Thumb.Proximal.BoneOrientation;
+			/*ThumbProxLeft = OwningPawn->LeftHand->Thumb.Proximal.BoneOrientation;
 			ThumbInterLeft = OwningPawn->LeftHand->Thumb.Intermediate.BoneOrientation;
 			ThumbDistLeft = OwningPawn->LeftHand->Thumb.Distal.BoneOrientation;
 			IndexProxLeft = OwningPawn->LeftHand->Index.Proximal.BoneOrientation;
@@ -54,14 +57,14 @@ void UVRAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 			RingDistLeft = OwningPawn->LeftHand->Ring.Distal.BoneOrientation;
 			PinkyProxLeft = OwningPawn->LeftHand->Pinky.Proximal.BoneOrientation;
 			PinkyInterLeft = OwningPawn->LeftHand->Pinky.Intermediate.BoneOrientation;
-			PinkyDistLeft = OwningPawn->LeftHand->Pinky.Distal.BoneOrientation;
+			PinkyDistLeft = OwningPawn->LeftHand->Pinky.Distal.BoneOrientation;*/
 		}
 		else
 		{
 			TrackLeft = 0;
 
-			ElbowLeft = OwningPawn->GetConvertedRotation(FName("lowerarm_l")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_WristRight).Rotator();
-			WristLeft = OwningPawn->GetConvertedRotation(FName("hand_l")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_HandRight).Rotator();
+			ElbowLeft = OwningPawn->GetConvertedTransform(FName("lowerarm_l")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_WristRight).Rotator();
+			WristLeft = OwningPawn->GetConvertedTransform(FName("hand_l")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_HandRight).Rotator();
 		}
 
 		if (OwningPawn->RightHand->Confidence > 0.1)
@@ -94,9 +97,30 @@ void UVRAnimInstance::NativeUpdateAnimation(float DeltaTimeX)
 		{
 			TrackRight = 0;
 
-			ElbowRight = OwningPawn->GetConvertedRotation(FName("lowerarm_r")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_WristRight).Rotator();
-			WristRight = OwningPawn->GetConvertedRotation(FName("hand_r")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_HandRight).Rotator();
+			ElbowRight = OwningPawn->GetConvertedTransform(FName("lowerarm_r")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_WristRight).Rotator();
+			WristRight = OwningPawn->GetConvertedTransform(FName("hand_r")).Rotator();//UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_HandRight).Rotator();
 		}
 		
 	}
+}
+
+float UVRAnimInstance::GetScaleFactor(FName ParentBone, FName ChildBone)
+{
+	float Result = 1.f;
+	if (OwningPawn)
+	{
+		float AnimLength = FVector::Dist(OwningPawn->BodyMesh->GetSocketLocation(ParentBone), OwningPawn->BodyMesh->GetSocketLocation(ChildBone));
+		float KinectLength = FVector::Dist(OwningPawn->GetConvertedTransform(ParentBone).GetLocation(), OwningPawn->GetConvertedTransform(ChildBone).GetLocation());
+		if (KinectLength != 0)
+		{
+			Result = KinectLength / AnimLength;
+		}
+	}
+	
+	if (Result > 0)
+	{
+		return Result;
+	}
+	
+	return 1.f;
 }

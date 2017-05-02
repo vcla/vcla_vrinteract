@@ -22,6 +22,8 @@ UHandObject::UHandObject()
 	Palm = FBoneStruct();
 
 	Confidence = 0;
+	PreviousGrabStrength = 0;
+	CurrentGrabStrength = 0;
 }
 
 void UHandObject::CopyHand(UHandObject* OtherHand)
@@ -43,6 +45,9 @@ void UHandObject::UpdateFromLeapHand(ULeapHand* LeapHand)
 	LeapHandType MyHandType = LeapHand->HandType;
 	Confidence = LeapHand->Confidence;
 
+	PreviousGrabStrength = CurrentGrabStrength;
+	CurrentGrabStrength = LeapHand->GrabStrength;
+
 	Arm.BoneOrientation = ConvertRotator(LeapHand->Arm->GetOrientation(MyHandType));
 	Palm.BoneOrientation = ConvertRotator(LeapHand->PalmOrientation);
 
@@ -57,6 +62,8 @@ void UHandObject::UpdateFromLeapHand(ULeapHand* LeapHand)
 
 	//Fingers
 	ULeapFingerList* Fingers = LeapHand->Fingers();
+
+	GrabCenter = LeapHand->SphereCenter;
 
 
 	for (int i = 0; i < Fingers->Count; i++)

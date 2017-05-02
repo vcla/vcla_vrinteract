@@ -20,6 +20,10 @@ public:
 
 	virtual void NativeUpdateAnimation(float DeltaTimeX) override;
 
+	//finds the amount to scale parent to child bone by to match up w/ kinect length
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Avateering")
+	float GetScaleFactor(FName ParentBone, FName ChildBone);
+
 	AVRPawn* OwningPawn;
 	
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
@@ -27,10 +31,20 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
 		float TrackRight;
 
+	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
+	//	float LeftArmScale;
+	//UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
+	//	float RightArmScale;
+
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
 		FVector LeftHandLocation;
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
 		FVector RightHandLocation;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
+		FVector LeftElbowLocation;
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
+		FVector RightElbowLocation;
 
 #pragma region bonerotations
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
