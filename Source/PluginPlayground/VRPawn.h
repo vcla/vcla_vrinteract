@@ -3,32 +3,16 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
-#include "KinectStructs.h"
 #include "LeapController.h"
 #include "LeapEnums.h"
 #include "LeapEventInterface.h"
 #include "HandObject.h"
+#include "BasePawn.h"
 #include "VRPawn.generated.h"
 
 
-USTRUCT()
-struct FAvatarBoneInfo
-{
-	GENERATED_BODY()
-
-		UPROPERTY(EditDefaultsOnly, Category = "AvatarBoneInfo")
-		FName AvatarBoneName = FName();
-
-	//Specific to a particular skeletal mesh, must be updated
-	UPROPERTY(EditDefaultsOnly, Category = "AvatarBoneInfo")
-		FRotator NeutralBoneRotation = FRotator();
-
-	UPROPERTY(EditDefaultsOnly, Category = "AvatarBoneInfo")
-		TEnumAsByte<EJoint::Type> KinectJointType = EJoint::JointType_SpineBase;
-};
-
 UCLASS()
-class PLUGINPLAYGROUND_API AVRPawn : public APawn, public ILeapEventInterface
+class PLUGINPLAYGROUND_API AVRPawn : public ABasePawn, public ILeapEventInterface
 {
 	GENERATED_BODY()
 
@@ -48,25 +32,25 @@ public:
 	//virtual void LeapHandMoved_Implementation(ULeapHand* hand) override;
 
 	// Sets Pawn's internal values based on the user's current real world position
-	void CalibratePawn();
+	virtual void CalibratePawn() override;
 
-	//Avateering functions and properties
-	FTransform GetConvertedTransform(FName BoneName);
+	////Avateering functions and properties
+	//FTransform GetConvertedTransform(FName BoneName);
 
-	UPROPERTY(EditAnywhere, Category = "Avateering")
-		TArray<FAvatarBoneInfo> BoneInfoArray;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	USkeletalMeshComponent* BodyMesh;
+	//UPROPERTY(EditAnywhere, Category = "Avateering")
+	//	TArray<FAvatarBoneInfo> BoneInfoArray;
+	//
+	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+	//USkeletalMeshComponent* BodyMesh;
 
-	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	USkeletalMeshComponent* HeadMesh;
+	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+	//USkeletalMeshComponent* HeadMesh;
 
-	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	USceneComponent* HeadOffset;
+	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+	//USceneComponent* HeadOffset;
 
-	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	UCameraComponent* CameraView;
+	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+	//UCameraComponent* CameraView;
 
 	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
 	ULeapController* LeapController;
@@ -91,15 +75,11 @@ public:
 	UInteractableBaseComponent* RightHandObject;
 	UInteractableBaseComponent* LeftHandObject;
 
-	void Grab(UHandObject* GrabbingHand);
-	void Release(UHandObject* ReleasingHand);
+	//void Grab(UHandObject* GrabbingHand);
+	//void Release(UHandObject* ReleasingHand);
 
 	void FireGrabEvents(UHandObject* Hand);
 
-	void UpdateAnimVariables();
-private:
-	//Distance between Kinect and user's hips when in neutral calibration pose
-	FTransform KinectNeutralOffset;
+	void UpdateHandVariables();
 
-	TMap<FName, FAvatarBoneInfo> BoneInfoMap;
 };

@@ -3,8 +3,8 @@
 #pragma once
 
 #include "Animation/AnimInstance.h"
-#include "KinectStructs.h"
-#include "VRPawn.h"
+//#include "KinectStructs.h"
+//#include "VRPawn.h"
 #include "HandObject.h"
 #include "VRAnimInstance.generated.h"
 
@@ -21,10 +21,10 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaTimeX) override;
 
 	//finds the amount to scale parent to child bone by to match up w/ kinect length
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Avateering")
-	float GetScaleFactor(FName ParentBone, FName ChildBone);
+	/*UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Avateering")
+	float GetScaleFactor(FName ParentBone, FName ChildBone);*/
 
-	AVRPawn* OwningPawn;
+	//AVRPawn* OwningPawn;
 	
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
 		float TrackLeft;
