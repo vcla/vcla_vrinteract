@@ -18,6 +18,7 @@ class PLUGINPLAYGROUND_API AVRPawn : public ABasePawn, public ILeapEventInterfac
 
 public:
 	// Sets default values for this pawn's properties
+
 	AVRPawn();
 
 	// Called when the game starts or when spawned
@@ -26,31 +27,8 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-
-	//virtual void LeapHandMoved_Implementation(ULeapHand* hand) override;
-
 	// Sets Pawn's internal values based on the user's current real world position
 	virtual void CalibratePawn() override;
-
-	////Avateering functions and properties
-	//FTransform GetConvertedTransform(FName BoneName);
-
-	//UPROPERTY(EditAnywhere, Category = "Avateering")
-	//	TArray<FAvatarBoneInfo> BoneInfoArray;
-	//
-	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	//USkeletalMeshComponent* BodyMesh;
-
-	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	//USkeletalMeshComponent* HeadMesh;
-
-	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	//USceneComponent* HeadOffset;
-
-	//UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
-	//UCameraComponent* CameraView;
 
 	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
 	ULeapController* LeapController;
@@ -58,11 +36,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
 		UHandObject* LeftHand;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
-		FRotator LeftHandNeutralOffset;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
 		UHandObject* RightHand;
+
+	//skeleton dependent rotator representing additional rotation of the hand joint
+	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
+		FRotator LeftHandNeutralOffset;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
 		FRotator RightHandNeutralOffset;
@@ -71,12 +50,6 @@ public:
 		float GrabThreshold;
 
 	//Interaction functions and properties
-
-	UInteractableBaseComponent* RightHandObject;
-	UInteractableBaseComponent* LeftHandObject;
-
-	//void Grab(UHandObject* GrabbingHand);
-	//void Release(UHandObject* ReleasingHand);
 
 	void FireGrabEvents(UHandObject* Hand);
 

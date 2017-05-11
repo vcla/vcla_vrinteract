@@ -24,6 +24,9 @@ ABasePawn::ABasePawn()
 	HeadOffset->SetupAttachment(RootComponent);
 	CameraView->SetupAttachment(HeadOffset);
 	HeadMesh->SetupAttachment(CameraView);
+
+	MovementSpeed = 150;
+	TurnSpeed = .1f;
 }
 
 // Called when the game starts or when spawned
@@ -42,9 +45,21 @@ void ABasePawn::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
+	//Update Avatar animation
 	FVector HipsTranslationOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).GetTranslation() - KinectNeutralOffset.GetTranslation();
 	BodyMesh->SetRelativeLocation(HipsTranslationOffset);
 	UpdateBodyAnim();
+
+	//Consume movement input
+	FRotator NewRotation = GetActorRotation();
+	NewRotation.Yaw += TurnSpeed * MovementInput.Z * DeltaTime;
+	SetActorRotation(NewRotation);
+	FVector DisplacementVector = FVector(0, 0, 0);
+	DisplacementVector = GetActorForwardVector() * MovementInput.X + GetActorRightVector() * MovementInput.Y;
+	DisplacementVector = DisplacementVector.GetSafeNormal();
+	DisplacementVector = MovementSpeed * DisplacementVector * DeltaTime;
+	FVector NewLocation = GetActorLocation() + DisplacementVector;
+	SetActorLocation(NewLocation);
 }
 
 void ABasePawn::CalibratePawn()
@@ -72,6 +87,25 @@ void ABasePawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
 	Super::SetupPlayerInputComponent(InputComponent);
 
+	InputComponent->BindAction("Calibrate", EInputEvent::IE_Pressed, this, &ABasePawn::CalibratePawn);
+	InputComponent->BindAxis("MoveForward", this, &ABasePawn::ProcessForward);
+	InputComponent->BindAxis("MoveRight", this, &ABasePawn::ProcessRight);
+	InputComponent->BindAxis("RotateBody", this, &ABasePawn::ProcessRotate);
+}
+
+void ABasePawn::ProcessForward(float AxisValue)
+{
+	MovementInput.X = AxisValue;
+}
+
+void ABasePawn::ProcessRight(float AxisValue)
+{
+	MovementInput.Y = AxisValue;
+}
+
+void ABasePawn::ProcessRotate(float AxisValue)
+{
+	MovementInput.Z = AxisValue;
 }
 
 void ABasePawn::UpdateBodyAnim()
@@ -109,13 +143,46 @@ void ABasePawn::UpdateBodyAnim()
 	AnimInstance->WristRight = GetConvertedTransform(FName("hand_r")).Rotator();
 }
 
-void ABasePawn::Grab()
+void ABasePawn::Grab(bool IsLeft, TArray<UPrimitiveComponent*>& ComponentsToAttach)
 {
 
+	if (IsLeft)
+	{
+		for (auto& Comp : ComponentsToAttach)
+		{
+			Comp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepWorldTransform, LeftHandAttachPoint);
+		}
+		LeftHandGrabbedComponents.Append(ComponentsToAttach);
+	}
+	else
+	{
+		for (auto& Comp : ComponentsToAttach)
+		{
+			Comp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepWorldTransform, RightHandAttachPoint);
+		}
+		RightHandGrabbedComponents.Append(ComponentsToAttach);
+	}
 	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
 }
 
-void ABasePawn::Release()
+void ABasePawn::Release(bool IsLeft)
 {
+	if (IsLeft)
+	{
+		for (auto& Comp : LeftHandGrabbedComponents)
+		{
+			Comp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+			LeftHandGrabbedComponents.Empty();
+		}
+	}
+	else
+	{
+		for (auto& Comp : RightHandGrabbedComponents)
+		{
+			Comp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+			RightHandGrabbedComponents.Empty();
+		}
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("Releasing"));
 }

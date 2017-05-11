@@ -56,6 +56,18 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
 		UCameraComponent* CameraView;
 
+	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+		float MovementSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+		float TurnSpeed;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+		FName LeftHandAttachPoint;
+
+	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
+		FName RightHandAttachPoint;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
@@ -67,14 +79,23 @@ public:
 
 	virtual void CalibratePawn();
 	
-	virtual void Grab();
-	virtual void Release();
+	void Grab(bool IsLeft, TArray<UPrimitiveComponent*>& ComponentsToAttach);
+	void Release(bool IsLeft);
 
 	virtual void UpdateBodyAnim();
+
+	//Pawn movement
+	FVector MovementInput;
+
+	void ProcessForward(float AxisValue);
+	void ProcessRight(float AxisValue);
+	void ProcessRotate(float AxisValue);
 
 private:
 	//Distance between Kinect and user's hips when in neutral calibration pose
 	FTransform KinectNeutralOffset;
 
 	TMap<FName, FAvatarBoneInfo> BoneInfoMap;
+	TArray<UPrimitiveComponent*> LeftHandGrabbedComponents;
+	TArray<UPrimitiveComponent*> RightHandGrabbedComponents;
 };

@@ -8,26 +8,10 @@
 // Sets default values
 AVRPawn::AVRPawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	/*PrimaryActorTick.bCanEverTick = true;
-
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
-
-	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BodyMesh"));
-	HeadMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HeadMesh"));
-
-	HeadOffset = CreateDefaultSubobject<USceneComponent>(TEXT("HeadOffset"));
-	CameraView = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));*/
 
 	LeapController = CreateDefaultSubobject<ULeapController>(TEXT("LeapController"));
 	LeftHand = CreateDefaultSubobject<UHandObject>(TEXT("LeftHand"));
 	RightHand = CreateDefaultSubobject<UHandObject>(TEXT("RightHand"));
-
-	/*BodyMesh->SetupAttachment(RootComponent);
-
-	HeadOffset->SetupAttachment(RootComponent);
-	CameraView->SetupAttachment(HeadOffset);
-	HeadMesh->SetupAttachment(CameraView);*/
 
 	AddOwnedComponent(LeapController);
 
@@ -61,33 +45,9 @@ void AVRPawn::Tick( float DeltaTime )
 	UpdateHandVariables();
 }
 
-// Called to bind functionality to input
-void AVRPawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
-{
-	Super::SetupPlayerInputComponent(InputComponent);
-
-	InputComponent->BindAction("Calibrate", EInputEvent::IE_Pressed, this, &AVRPawn::CalibratePawn);
-}
-//
-//void AVRPawn::LeapHandMoved_Implementation(ULeapHand* hand)
-//{
-//	
-//	ILeapEventInterface* einterface = Cast<ILeapEventInterface>(this);
-//	if (einterface)
-//	{
-//		//FString LogString = einterface->ToString();
-//		//UE_LOG(LogTemp, Warning, TEXT("%s"), *LogString);
-//	}
-//	
-//}
-
 void AVRPawn::CalibratePawn()
 {
-	/*UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-
-	KinectNeutralOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase);
-	BodyMesh->SetRelativeLocation(FVector(0, 0, 0));*/
-
+	
 	Super::CalibratePawn();
 
 	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
@@ -96,44 +56,7 @@ void AVRPawn::CalibratePawn()
 		LeapController->SetLeapMountToHMDOffset(FVector(9.f, 0, 0));
 	}
 
-	//HeadOffset->SetRelativeRotation(UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_Neck).GetRotation());
 }
-
-//FTransform AVRPawn::GetConvertedTransform(FName BoneName)
-//{
-//	FAvatarBoneInfo* Info = BoneInfoMap.Find(BoneName);
-//	FTransform Result = FTransform();
-//	if (Info)
-//	{
-//		Result = UKinectFunctionLibrary::MyBody.KinectBones[Info->KinectJointType].JointTransform;
-//		Result.ConcatenateRotation(Info->NeutralBoneRotation.Quaternion());
-//	}
-//	return Result;
-//}
-
-//void AVRPawn::Grab(UHandObject* GrabbingHand)
-//{
-//	//setup grab trace parameters
-//	FCollisionObjectQueryParams ObjectParams(CAN_GRAB_OBJECT);
-//	FCollisionShape GrabRegion = FCollisionShape::MakeSphere(5.f);
-//	GetWorld()->DebugDrawTraceTag = FName("GrabTag");
-//	FCollisionQueryParams GrabCollisionParams;
-//	GrabCollisionParams.TraceTag = FName("GrabTag");
-//
-//	TArray<FOverlapResult> OverlapResults;
-//	FVector WorldGrabCenter = BodyMesh->GetComponentTransform().TransformVector(GrabbingHand->GrabCenter + HeadOffset->RelativeLocation);
-//	GetWorld()->OverlapMultiByObjectType(OverlapResults, WorldGrabCenter, FQuat(0, 0, 0, 1), ObjectParams, GrabRegion, GrabCollisionParams);
-//
-//	UE_LOG(LogTemp, Warning, TEXT("BodyMesh Location: %s"), *BodyMesh->GetComponentLocation().ToString());
-//	UE_LOG(LogTemp, Warning, TEXT("GrabCenter: %s"), *WorldGrabCenter.ToString());
-//
-//	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
-//}
-//
-//void AVRPawn::Release(UHandObject* ReleasingHand)
-//{
-//	UE_LOG(LogTemp, Warning, TEXT("Releasing"));
-//}
 
 void AVRPawn::FireGrabEvents(UHandObject * Hand)
 {
@@ -141,14 +64,14 @@ void AVRPawn::FireGrabEvents(UHandObject * Hand)
 	{
 		if (Hand->PreviousGrabStrength <= GrabThreshold)
 		{
-			Grab();
+			//Grab();
 		}
 	}
 	else
 	{
-		if (Hand->PreviousGrabStrength > GrabThreshold)
+		if (Hand->PreviousGrabStrength <= GrabThreshold)
 		{
-			Release();
+			//Release();
 		}
 	}
 }
