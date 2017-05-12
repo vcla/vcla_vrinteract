@@ -18,6 +18,9 @@ AVRPawn::AVRPawn()
 	LeftHandNeutralOffset = FRotator(1, 1, 1);
 	RightHandNeutralOffset = FRotator(1, 1, 1);
 
+	LeftHand->IsLeft = true;
+	RightHand->IsLeft = false;
+
 	GrabThreshold = 0.4;
 }
 
@@ -38,9 +41,14 @@ void AVRPawn::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 	
-
-	FireGrabEvents(LeftHand);
-	FireGrabEvents(RightHand);
+	if (LeftHand->Confidence > 0)
+	{
+		FireGrabEvents(LeftHand);
+	}
+	if (RightHand->Confidence > 0)
+	{
+		FireGrabEvents(RightHand);
+	}
 
 	UpdateHandVariables();
 }
@@ -60,18 +68,38 @@ void AVRPawn::CalibratePawn()
 
 void AVRPawn::FireGrabEvents(UHandObject * Hand)
 {
+	UWorld* TheWorld = this->GetWorld();
 	if (Hand->CurrentGrabStrength > GrabThreshold)
 	{
 		if (Hand->PreviousGrabStrength <= GrabThreshold)
 		{
-			//Grab();
+			TArray<UPrimitiveComponent*> ComponentArray = TArray<UPrimitiveComponent*>();
+			//spherecast yaaay
+			FVector HandLocation = HeadOffset->GetComponentLocation() + Hand->GrabCenter;//BodyMesh->GetSocketLocation(FName("hand_l"));
+			DrawDebugSphere(TheWorld, HandLocation, 5.f, 32, FColor(255, 0, 0), true);
+
+			TArray<FHitResult> OutResults;
+			FCollisionShape GrabSphere = FCollisionShape::MakeSphere(5.f);
+			FCollisionObjectQueryParams ObjectParams;
+			FCollisionQueryParams CollisionParams;
+			ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+			CollisionParams.bFindInitialOverlaps = true;
+			TheWorld->SweepMultiByObjectType(OutResults, HandLocation, HandLocation + FVector(1, 0, 0), FQuat(), ObjectParams, GrabSphere, CollisionParams);
+
+			for (auto& HitResult : OutResults)
+			{
+				ComponentArray.Add(HitResult.GetComponent());
+				UE_LOG(LogTemp, Warning, TEXT("Grabbing this component %s"), *HitResult.GetComponent()->GetName());
+			}
+
+			Grab(Hand->IsLeft, ComponentArray);
 		}
 	}
 	else
 	{
-		if (Hand->PreviousGrabStrength <= GrabThreshold)
+		if (Hand->PreviousGrabStrength > GrabThreshold)
 		{
-			//Release();
+			Release(Hand->IsLeft);
 		}
 	}
 }

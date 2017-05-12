@@ -93,6 +93,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Avateering")
 	float Confidence;
 
+	bool IsLeft;
+
 	float PreviousGrabStrength;
 	float CurrentGrabStrength;
 
