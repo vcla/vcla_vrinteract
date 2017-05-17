@@ -79,7 +79,7 @@ public:
 
 	virtual void CalibratePawn();
 	
-	void Grab(bool IsLeft, TArray<UPrimitiveComponent*>& ComponentsToAttach);
+	void Grab(bool IsLeft, TArray<FHitResult>& GrabHits);
 	void Release(bool IsLeft);
 
 	virtual void UpdateBodyAnim();
@@ -98,4 +98,8 @@ private:
 	TMap<FName, FAvatarBoneInfo> BoneInfoMap;
 	TArray<UPrimitiveComponent*> LeftHandGrabbedComponents;
 	TArray<UPrimitiveComponent*> RightHandGrabbedComponents;
+
+	//AActors since direct array of interfaces is a pain. should never be not interfaces, but check for it anyways
+	TArray<AActor*> LeftHandCustomGrab; 
+	TArray<AActor*> RightHandCustomGrab;
 };

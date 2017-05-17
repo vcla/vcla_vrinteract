@@ -2,13 +2,14 @@
 
 #include "PluginPlayground.h"
 #include "KinectFunctionLibrary.h"
+#include "CustomGrabInterface.h"
 #include "BasePawn.h"
 
 
 // Sets default values
 ABasePawn::ABasePawn()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
@@ -41,9 +42,9 @@ void ABasePawn::BeginPlay()
 }
 
 // Called every frame
-void ABasePawn::Tick( float DeltaTime )
+void ABasePawn::Tick(float DeltaTime)
 {
-	Super::Tick( DeltaTime );
+	Super::Tick(DeltaTime);
 
 	//Update Avatar animation
 	FVector HipsTranslationOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).GetTranslation() - KinectNeutralOffset.GetTranslation();
@@ -143,24 +144,49 @@ void ABasePawn::UpdateBodyAnim()
 	AnimInstance->WristRight = GetConvertedTransform(FName("hand_r")).Rotator();
 }
 
-void ABasePawn::Grab(bool IsLeft, TArray<UPrimitiveComponent*>& ComponentsToAttach)
+void ABasePawn::Grab(bool IsLeft, TArray<FHitResult>& GrabHits)
 {
-
+	FAttachmentTransformRules GrabRules = FAttachmentTransformRules::KeepWorldTransform;
+	GrabRules.bWeldSimulatedBodies = true;
 	if (IsLeft)
 	{
-		for (auto& Comp : ComponentsToAttach)
+		for (auto& Hit : GrabHits)
 		{
-			Comp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepWorldTransform, LeftHandAttachPoint);
+			ICustomGrabInterface* CustomGrabActor = Cast<ICustomGrabInterface>(Hit.GetActor());
+			if (CustomGrabActor)
+			{
+				LeftHandCustomGrab.Add(Hit.GetActor());
+				CustomGrabActor->OnGrab(this, IsLeft);
+			}
+			else
+			{
+				UPrimitiveComponent* Comp = Hit.GetComponent();
+				Comp->SetSimulatePhysics(false);
+
+				Comp->AttachToComponent(BodyMesh, GrabRules, LeftHandAttachPoint);
+				LeftHandGrabbedComponents.Add(Comp);
+			}
 		}
-		LeftHandGrabbedComponents.Append(ComponentsToAttach);
 	}
 	else
 	{
-		for (auto& Comp : ComponentsToAttach)
+		for (auto& Hit : GrabHits)
 		{
-			Comp->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepWorldTransform, RightHandAttachPoint);
+			ICustomGrabInterface* CustomGrabActor = Cast<ICustomGrabInterface>(Hit.GetActor());
+			if (CustomGrabActor)
+			{
+				RightHandCustomGrab.Add(Hit.GetActor());
+				CustomGrabActor->OnGrab(this, IsLeft);
+			}
+			else
+			{
+				UPrimitiveComponent* Comp = Hit.GetComponent();
+				Comp->SetSimulatePhysics(false);
+
+				Comp->AttachToComponent(BodyMesh, GrabRules, RightHandAttachPoint);
+				RightHandGrabbedComponents.Add(Comp);
+			}
 		}
-		RightHandGrabbedComponents.Append(ComponentsToAttach);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
 }
@@ -172,16 +198,38 @@ void ABasePawn::Release(bool IsLeft)
 		for (auto& Comp : LeftHandGrabbedComponents)
 		{
 			Comp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-			LeftHandGrabbedComponents.Empty();
+			Comp->SetSimulatePhysics(true);
 		}
+		LeftHandGrabbedComponents.Empty();
+
+		for (auto& CustomActor : LeftHandCustomGrab)
+		{
+			ICustomGrabInterface* CustomInterfaceRef = Cast<ICustomGrabInterface>(CustomActor);
+			if (CustomInterfaceRef)
+			{
+				CustomInterfaceRef->OnRelease(this, IsLeft);
+			}
+		}
+		LeftHandCustomGrab.Empty();
 	}
 	else
 	{
 		for (auto& Comp : RightHandGrabbedComponents)
 		{
 			Comp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-			RightHandGrabbedComponents.Empty();
+			Comp->SetSimulatePhysics(true);
 		}
+		RightHandGrabbedComponents.Empty();
+
+		for (auto& CustomActor : LeftHandCustomGrab)
+		{
+			ICustomGrabInterface* CustomInterfaceRef = Cast<ICustomGrabInterface>(CustomActor);
+			if (CustomInterfaceRef)
+			{
+				CustomInterfaceRef->OnRelease(this, IsLeft);
+			}
+		}
+		RightHandCustomGrab.Empty();
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Releasing"));

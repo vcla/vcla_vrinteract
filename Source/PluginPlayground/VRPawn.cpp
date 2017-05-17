@@ -83,16 +83,17 @@ void AVRPawn::FireGrabEvents(UHandObject * Hand)
 			FCollisionObjectQueryParams ObjectParams;
 			FCollisionQueryParams CollisionParams;
 			ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+			ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
 			CollisionParams.bFindInitialOverlaps = true;
-			TheWorld->SweepMultiByObjectType(OutResults, HandLocation, HandLocation + FVector(1, 0, 0), FQuat(), ObjectParams, GrabSphere, CollisionParams);
+			TheWorld->SweepMultiByObjectType(OutResults, HandLocation, HandLocation + FVector(.1, 0, 0), FQuat(), ObjectParams, GrabSphere, CollisionParams);
 
-			for (auto& HitResult : OutResults)
-			{
-				ComponentArray.Add(HitResult.GetComponent());
-				UE_LOG(LogTemp, Warning, TEXT("Grabbing this component %s"), *HitResult.GetComponent()->GetName());
-			}
+			//for (auto& HitResult : OutResults)
+			//{
+			//	ComponentArray.Add(HitResult.GetComponent());
+			//	UE_LOG(LogTemp, Warning, TEXT("Grabbing this component %s"), *HitResult.GetComponent()->GetName());
+			//}
 
-			Grab(Hand->IsLeft, ComponentArray);
+			Grab(Hand->IsLeft, OutResults);
 		}
 	}
 	else
