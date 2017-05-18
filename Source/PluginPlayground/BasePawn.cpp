@@ -137,6 +137,8 @@ void ABasePawn::UpdateBodyAnim()
 
 	AnimInstance->LeftElbowLocation = GetConvertedTransform(FName("lowerarm_l")).GetLocation();
 	AnimInstance->RightElbowLocation = GetConvertedTransform(FName("lowerarm_r")).GetLocation();
+	AnimInstance->LeftHandLocation = GetConvertedTransform(FName("hand_l")).GetLocation();
+	AnimInstance->RightHandLocation = GetConvertedTransform(FName("hand_r")).GetLocation();
 
 	AnimInstance->ElbowLeft = GetConvertedTransform(FName("lowerarm_l")).Rotator();
 	AnimInstance->WristLeft = GetConvertedTransform(FName("hand_l")).Rotator();
@@ -221,7 +223,7 @@ void ABasePawn::Release(bool IsLeft)
 		}
 		RightHandGrabbedComponents.Empty();
 
-		for (auto& CustomActor : LeftHandCustomGrab)
+		for (auto& CustomActor : RightHandCustomGrab)
 		{
 			ICustomGrabInterface* CustomInterfaceRef = Cast<ICustomGrabInterface>(CustomActor);
 			if (CustomInterfaceRef)
