@@ -190,7 +190,7 @@ void ABasePawn::Grab(bool IsLeft, TArray<FHitResult>& GrabHits)
 			}
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
+	//UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
 }
 
 void ABasePawn::Release(bool IsLeft)
@@ -234,5 +234,5 @@ void ABasePawn::Release(bool IsLeft)
 		RightHandCustomGrab.Empty();
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Releasing"));
+	//UE_LOG(LogTemp, Warning, TEXT("Releasing"));
 }

@@ -75,8 +75,8 @@ void AVRPawn::FireGrabEvents(UHandObject * Hand)
 		{
 			TArray<UPrimitiveComponent*> ComponentArray = TArray<UPrimitiveComponent*>();
 			//spherecast yaaay
-			FVector HandLocation = HeadOffset->GetComponentLocation() + Hand->GrabCenter;//BodyMesh->GetSocketLocation(FName("hand_l"));
-			DrawDebugSphere(TheWorld, HandLocation, 5.f, 32, FColor(255, 0, 0), true);
+			FVector HandLocation = BodyMesh->GetSocketLocation(Hand->IsLeft ? LeftHandAttachPoint : RightHandAttachPoint);
+			DrawDebugSphere(TheWorld, HandLocation, 5.f, 8, FColor(255, 0, 0), true);
 
 			TArray<FHitResult> OutResults;
 			FCollisionShape GrabSphere = FCollisionShape::MakeSphere(5.f);
@@ -86,12 +86,6 @@ void AVRPawn::FireGrabEvents(UHandObject * Hand)
 			ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
 			CollisionParams.bFindInitialOverlaps = true;
 			TheWorld->SweepMultiByObjectType(OutResults, HandLocation, HandLocation + FVector(.1, 0, 0), FQuat(), ObjectParams, GrabSphere, CollisionParams);
-
-			//for (auto& HitResult : OutResults)
-			//{
-			//	ComponentArray.Add(HitResult.GetComponent());
-			//	UE_LOG(LogTemp, Warning, TEXT("Grabbing this component %s"), *HitResult.GetComponent()->GetName());
-			//}
 
 			Grab(Hand->IsLeft, OutResults);
 		}

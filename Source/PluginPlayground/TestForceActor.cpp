@@ -42,11 +42,11 @@ void ATestForceActor::OnGrab(ABasePawn* PawnRef, bool IsLeft)
 	GrabbingPawn = PawnRef;
 	HandName = IsLeft ? PawnRef->LeftHandAttachPoint : PawnRef->RightHandAttachPoint;
 	RelativeGrabPoint = GrabbingPawn->BodyMesh->GetBoneLocation(HandName, EBoneSpaces::WorldSpace)-MeshComponent->GetComponentLocation();
-	UE_LOG(LogTemp, Warning, TEXT("CUSTOM GRAB IS HAPPENING???"));
+	//UE_LOG(LogTemp, Warning, TEXT("CUSTOM GRAB IS HAPPENING???"));
 }
 
 void ATestForceActor::OnRelease(ABasePawn* PawnRef, bool IsLeft)
 {
 	GrabbingPawn = NULL;
-	UE_LOG(LogTemp, Warning, TEXT("CUSTOM RELEASING???"));
+	//UE_LOG(LogTemp, Warning, TEXT("CUSTOM RELEASING???"));
 }

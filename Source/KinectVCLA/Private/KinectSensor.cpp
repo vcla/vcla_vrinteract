@@ -93,17 +93,17 @@ uint32 FKinectSensor::Run()
 		}
 		case WAIT_TIMEOUT:
 		{
-			UE_LOG(LogTemp, Warning, TEXT("wait timed out"));
+			//UE_LOG(LogTemp, Warning, TEXT("wait timed out"));
 			break;
 		}
 		case WAIT_FAILED:
 		{
-			UE_LOG(LogTemp, Warning, TEXT("wait failed: %d"), (uint32)GetLastError());
+			//UE_LOG(LogTemp, Warning, TEXT("wait failed: %d"), (uint32)GetLastError());
 			break;
 		}
 		default:
 		{
-			UE_LOG(LogTemp, Warning, TEXT("well something weird happened: %d"), (uint32)WaitResult);
+			//UE_LOG(LogTemp, Warning, TEXT("well something weird happened: %d"), (uint32)WaitResult);
 			break;
 		}
 		}
