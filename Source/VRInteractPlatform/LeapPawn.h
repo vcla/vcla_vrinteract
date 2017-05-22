@@ -10,7 +10,9 @@
 #include "BasePawn.h"
 #include "LeapPawn.generated.h"
 
-
+/**
+* Pawn with leap motion used for fine control of the hands
+*/
 UCLASS()
 class VRINTERACTPLATFORM_API ALeapPawn : public ABasePawn, public ILeapEventInterface
 {
@@ -39,13 +41,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
 		UHandObject* RightHand;
 
-	//skeleton dependent rotator representing additional rotation of the hand joint
+	//skeleton dependent rotator, represents additional offset skeleton hand joint needed to align with Leap Motion's axis
 	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
 		FRotator LeftHandNeutralOffset;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
 		FRotator RightHandNeutralOffset;
 
+	//Value Leap grab value needs to cross in order to be considered a grab
 	UPROPERTY(EditDefaultsOnly, Category = "Avateering")
 		float GrabThreshold;
 

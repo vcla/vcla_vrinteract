@@ -3,13 +3,12 @@
 #pragma once
 
 #include "Animation/AnimInstance.h"
-//#include "KinectStructs.h"
-//#include "VRPawn.h"
 #include "HandObject.h"
 #include "VRAnimInstance.generated.h"
 
 /**
- * 
+ * Base UAnimInstance class for VR control
+ * Contains all variables necessary for controlling a skeleton with the idea that they'll be updated from the Pawn class
  */
 UCLASS()
 class VRINTERACTPLATFORM_API UVRAnimInstance : public UAnimInstance

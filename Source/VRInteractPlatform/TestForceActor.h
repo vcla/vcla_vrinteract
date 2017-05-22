@@ -6,6 +6,11 @@
 #include "CustomGrabInterface.h"
 #include "TestForceActor.generated.h"
 
+
+/**
+* Example of using the CustomGrabInterface to perform custom logic on grab
+* Instead of attaching the static mesh component, it applies a force each tick 
+*/
 UCLASS()
 class VRINTERACTPLATFORM_API ATestForceActor : public AActor, public ICustomGrabInterface
 {

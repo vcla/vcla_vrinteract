@@ -6,7 +6,7 @@
 #include "TestGameMode.generated.h"
 
 /**
- * 
+ * Basic gamemode, just turns on and off the kinect
  */
 UCLASS()
 class VRINTERACTPLATFORM_API ATestGameMode : public AGameMode

@@ -12,9 +12,7 @@ UINTERFACE(BlueprintType)
 class VRINTERACTPLATFORM_API UCustomGrabInterface : public UInterface
 {
 	GENERATED_BODY()
-	
-	
-	
+
 	
 };
 

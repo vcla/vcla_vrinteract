@@ -39,6 +39,8 @@ public:
 	ABasePawn();
 
 	//Avateering functions and properties
+
+	//Gets the orientation of a bone from the kinect adjusted based on the skeletal mesh's bone orientations
 	FTransform GetConvertedTransform(FName BoneName);
 
 	UPROPERTY(EditAnywhere, Category = "Avateering")
@@ -62,6 +64,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
 		float TurnSpeed;
 
+	//Name of the joint where objects should be attached
 	UPROPERTY(EditDefaultsOnly, Category = "VRPawn")
 		FName LeftHandAttachPoint;
 
@@ -82,6 +85,7 @@ public:
 	void Grab(bool IsLeft, TArray<FHitResult>& GrabHits);
 	void Release(bool IsLeft);
 
+	//Update the body's animinstance, assumed to be VRAnimInstance
 	virtual void UpdateBodyAnim();
 
 	//Pawn movement
@@ -95,6 +99,7 @@ private:
 	//Distance between Kinect and user's hips when in neutral calibration pose
 	FTransform KinectNeutralOffset;
 
+	//Default is attaching components instead of the whole actor to deal with actors w/ more than one mesh to grab
 	TMap<FName, FAvatarBoneInfo> BoneInfoMap;
 	TArray<UPrimitiveComponent*> LeftHandGrabbedComponents;
 	TArray<UPrimitiveComponent*> RightHandGrabbedComponents;

@@ -27,8 +27,8 @@ struct VRINTERACTPLATFORM_API FFingerStruct
 {
 	GENERATED_BODY()
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
-		FBoneStruct Proximal;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
+	FBoneStruct Proximal;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
 	FBoneStruct Intermediate;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Avateering")
@@ -58,7 +58,7 @@ public:
 
 
 
-	/**The additional rotation required by the avatar in order for the bone to be in */
+	/**The additional rotation required by the avatar in order for the bone to be in a neutral pose */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Avateering")
 		FRotator NeutralBoneOrientation;
 
