@@ -9,7 +9,7 @@
  * 
  */
 UCLASS()
-class PLUGINPLAYGROUND_API ATestGameMode : public AGameMode
+class VRINTERACTPLATFORM_API ATestGameMode : public AGameMode
 {
 	GENERATED_BODY()
 

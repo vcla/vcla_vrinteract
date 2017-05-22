@@ -30,7 +30,7 @@ struct FAvatarBoneInfo
 //Assumption is that they'd all use the kinect for the main body, so that functionality is here
 //Though in case someone comes up with an alternative for getting body info those functions are virtual
 UCLASS()
-class PLUGINPLAYGROUND_API ABasePawn : public APawn
+class VRINTERACTPLATFORM_API ABasePawn : public APawn
 {
 	GENERATED_BODY()
 

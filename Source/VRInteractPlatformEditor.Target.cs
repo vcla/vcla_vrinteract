@@ -3,11 +3,11 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class PluginPlaygroundTarget : TargetRules
+public class VRInteractPlatformEditorTarget : TargetRules
 {
-	public PluginPlaygroundTarget(TargetInfo Target)
+	public VRInteractPlatformEditorTarget(TargetInfo Target)
 	{
-		Type = TargetType.Game;
+		Type = TargetType.Editor;
 	}
 
 	//
@@ -20,6 +20,6 @@ public class PluginPlaygroundTarget : TargetRules
 		ref List<string> OutExtraModuleNames
 		)
 	{
-		OutExtraModuleNames.AddRange( new string[] { "PluginPlayground", "KinectVCLA" } );
+		OutExtraModuleNames.AddRange( new string[] { "VRInteractPlatform", "KinectVCLA" } );
 	}
 }

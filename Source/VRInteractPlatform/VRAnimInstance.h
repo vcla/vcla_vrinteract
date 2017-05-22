@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class PLUGINPLAYGROUND_API UVRAnimInstance : public UAnimInstance
+class VRINTERACTPLATFORM_API UVRAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
 public:

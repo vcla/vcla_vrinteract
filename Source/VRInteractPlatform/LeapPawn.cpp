@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "PluginPlayground.h"
-#include "VRPawn.h"
+#include "VRInteractPlatform.h"
+#include "LeapPawn.h"
 #include "HeadMountedDisplay.h"
 
 
 // Sets default values
-AVRPawn::AVRPawn()
+ALeapPawn::ALeapPawn()
 {
 
 	LeapController = CreateDefaultSubobject<ULeapController>(TEXT("LeapController"));
@@ -25,7 +25,7 @@ AVRPawn::AVRPawn()
 }
 
 // Called when the game starts or when spawned
-void AVRPawn::BeginPlay()
+void ALeapPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -37,7 +37,7 @@ void AVRPawn::BeginPlay()
 }
 
 // Called every frame
-void AVRPawn::Tick( float DeltaTime )
+void ALeapPawn::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 	
@@ -53,7 +53,7 @@ void AVRPawn::Tick( float DeltaTime )
 	UpdateHandVariables();
 }
 
-void AVRPawn::CalibratePawn()
+void ALeapPawn::CalibratePawn()
 {
 	
 	Super::CalibratePawn();
@@ -66,7 +66,7 @@ void AVRPawn::CalibratePawn()
 
 }
 
-void AVRPawn::FireGrabEvents(UHandObject * Hand)
+void ALeapPawn::FireGrabEvents(UHandObject * Hand)
 {
 	UWorld* TheWorld = this->GetWorld();
 	if (Hand->CurrentGrabStrength > GrabThreshold)
@@ -99,7 +99,7 @@ void AVRPawn::FireGrabEvents(UHandObject * Hand)
 	}
 }
 
-void AVRPawn::UpdateHandVariables()
+void ALeapPawn::UpdateHandVariables()
 {
 	if (!BodyMesh)
 	{

@@ -8,18 +8,18 @@
 #include "LeapEventInterface.h"
 #include "HandObject.h"
 #include "BasePawn.h"
-#include "VRPawn.generated.h"
+#include "LeapPawn.generated.h"
 
 
 UCLASS()
-class PLUGINPLAYGROUND_API AVRPawn : public ABasePawn, public ILeapEventInterface
+class VRINTERACTPLATFORM_API ALeapPawn : public ABasePawn, public ILeapEventInterface
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
 
-	AVRPawn();
+	ALeapPawn();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

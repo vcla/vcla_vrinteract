@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Engine.h"
-#include "InteractableBaseComponent.h"
 #include "HandObject.h"
 
 #define CAN_GRAB_OBJECT ECC_GameTraceChannel1

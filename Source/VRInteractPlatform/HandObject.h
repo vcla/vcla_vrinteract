@@ -8,7 +8,7 @@
 #include "HandObject.generated.h"
 
 USTRUCT(BlueprintType)
-struct PLUGINPLAYGROUND_API FBoneStruct
+struct VRINTERACTPLATFORM_API FBoneStruct
 {
 	GENERATED_BODY()
 
@@ -23,7 +23,7 @@ struct PLUGINPLAYGROUND_API FBoneStruct
 };
 
 USTRUCT(BlueprintType)
-struct PLUGINPLAYGROUND_API FFingerStruct
+struct VRINTERACTPLATFORM_API FFingerStruct
 {
 	GENERATED_BODY()
 
@@ -49,7 +49,7 @@ struct PLUGINPLAYGROUND_API FFingerStruct
  * 
  */
 UCLASS(Blueprintable)
-class PLUGINPLAYGROUND_API UHandObject : public UObject
+class VRINTERACTPLATFORM_API UHandObject : public UObject
 {
 	GENERATED_BODY()
 	

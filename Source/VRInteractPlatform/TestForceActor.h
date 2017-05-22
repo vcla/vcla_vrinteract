@@ -7,7 +7,7 @@
 #include "TestForceActor.generated.h"
 
 UCLASS()
-class PLUGINPLAYGROUND_API ATestForceActor : public AActor, public ICustomGrabInterface
+class VRINTERACTPLATFORM_API ATestForceActor : public AActor, public ICustomGrabInterface
 {
 	GENERATED_BODY()
 	

@@ -9,7 +9,7 @@
  * Interface for when after being grabbed an object needs to do something other than get attached to the hand
  */
 UINTERFACE(BlueprintType)
-class PLUGINPLAYGROUND_API UCustomGrabInterface : public UInterface
+class VRINTERACTPLATFORM_API UCustomGrabInterface : public UInterface
 {
 	GENERATED_BODY()
 	
@@ -18,7 +18,7 @@ class PLUGINPLAYGROUND_API UCustomGrabInterface : public UInterface
 	
 };
 
-class PLUGINPLAYGROUND_API ICustomGrabInterface
+class VRINTERACTPLATFORM_API ICustomGrabInterface
 {
 	GENERATED_BODY()
 

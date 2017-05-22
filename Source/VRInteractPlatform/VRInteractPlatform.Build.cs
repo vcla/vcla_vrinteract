@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class PluginPlayground : ModuleRules
+public class VRInteractPlatform : ModuleRules
 {
-	public PluginPlayground(TargetInfo Target)
+	public VRInteractPlatform(TargetInfo Target)
 	{
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "KinectVCLA", "HeadMountedDisplay", "LeapMotion" });
 
