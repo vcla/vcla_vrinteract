@@ -82,7 +82,7 @@ public:
 
 	virtual void CalibratePawn();
 	
-	void Grab(bool IsLeft, TArray<FHitResult>& GrabHits);
+	void Grab(bool IsLeft);
 	void Release(bool IsLeft);
 
 	//Update the body's animinstance, assumed to be VRAnimInstance

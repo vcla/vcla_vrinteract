@@ -146,20 +146,39 @@ void ABasePawn::UpdateBodyAnim()
 	AnimInstance->WristRight = GetConvertedTransform(FName("hand_r")).Rotator();
 }
 
-void ABasePawn::Grab(bool IsLeft, TArray<FHitResult>& GrabHits)
+void ABasePawn::Grab(bool IsLeft)
 {
+	//Spherecast to find all primitive components in grab range
+	UWorld* TheWorld = this->GetWorld();
+
+	FVector HandLocation = BodyMesh->GetSocketLocation(IsLeft ? LeftHandAttachPoint : RightHandAttachPoint);
+	DrawDebugSphere(TheWorld, HandLocation, 5.f, 8, FColor(255, 0, 0), true);
+
+	TArray<FHitResult> OutResults;
+	FCollisionShape GrabSphere = FCollisionShape::MakeSphere(5.f);
+	FCollisionObjectQueryParams ObjectParams;
+	FCollisionQueryParams CollisionParams;
+	ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
+	ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
+	CollisionParams.bFindInitialOverlaps = true;
+	TheWorld->SweepMultiByObjectType(OutResults, HandLocation, HandLocation + FVector(.1, 0, 0), FQuat(), ObjectParams, GrabSphere, CollisionParams);
+
+	//Calling grab logic on all components in range
 	FAttachmentTransformRules GrabRules = FAttachmentTransformRules::KeepWorldTransform;
 	GrabRules.bWeldSimulatedBodies = true;
 	if (IsLeft)
 	{
-		for (auto& Hit : GrabHits)
+		for (auto& Hit : OutResults)
 		{
 			ICustomGrabInterface* CustomGrabActor = Cast<ICustomGrabInterface>(Hit.GetActor());
-			if (CustomGrabActor)
+			//special logic for components attached to special actors 
+			//TODO:worry about multiple hits per actor?
+			if (CustomGrabActor) 
 			{
 				LeftHandCustomGrab.Add(Hit.GetActor());
 				CustomGrabActor->OnGrab(this, IsLeft);
 			}
+			//regular attach logic for other components
 			else
 			{
 				UPrimitiveComponent* Comp = Hit.GetComponent();
@@ -172,7 +191,7 @@ void ABasePawn::Grab(bool IsLeft, TArray<FHitResult>& GrabHits)
 	}
 	else
 	{
-		for (auto& Hit : GrabHits)
+		for (auto& Hit : OutResults)
 		{
 			ICustomGrabInterface* CustomGrabActor = Cast<ICustomGrabInterface>(Hit.GetActor());
 			if (CustomGrabActor)

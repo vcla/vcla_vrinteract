@@ -68,26 +68,11 @@ void ALeapPawn::CalibratePawn()
 
 void ALeapPawn::FireGrabEvents(UHandObject * Hand)
 {
-	UWorld* TheWorld = this->GetWorld();
 	if (Hand->CurrentGrabStrength > GrabThreshold)
 	{
 		if (Hand->PreviousGrabStrength <= GrabThreshold)
 		{
-			TArray<UPrimitiveComponent*> ComponentArray = TArray<UPrimitiveComponent*>();
-			//spherecast yaaay
-			FVector HandLocation = BodyMesh->GetSocketLocation(Hand->IsLeft ? LeftHandAttachPoint : RightHandAttachPoint);
-			DrawDebugSphere(TheWorld, HandLocation, 5.f, 8, FColor(255, 0, 0), true);
-
-			TArray<FHitResult> OutResults;
-			FCollisionShape GrabSphere = FCollisionShape::MakeSphere(5.f);
-			FCollisionObjectQueryParams ObjectParams;
-			FCollisionQueryParams CollisionParams;
-			ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldDynamic);
-			ObjectParams.AddObjectTypesToQuery(ECollisionChannel::ECC_PhysicsBody);
-			CollisionParams.bFindInitialOverlaps = true;
-			TheWorld->SweepMultiByObjectType(OutResults, HandLocation, HandLocation + FVector(.1, 0, 0), FQuat(), ObjectParams, GrabSphere, CollisionParams);
-
-			Grab(Hand->IsLeft, OutResults);
+			Grab(Hand->IsLeft);
 		}
 	}
 	else
