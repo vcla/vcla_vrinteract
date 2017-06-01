@@ -22,7 +22,7 @@ ABasePawn::ABasePawn()
 
 	BodyMesh->SetupAttachment(RootComponent);
 
-	HeadOffset->SetupAttachment(RootComponent);
+	HeadOffset->SetupAttachment(BodyMesh);
 	CameraView->SetupAttachment(HeadOffset);
 	HeadMesh->SetupAttachment(CameraView);
 
@@ -47,8 +47,7 @@ void ABasePawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//Update Avatar animation
-	FVector HipsTranslationOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).GetTranslation() - KinectNeutralOffset.GetTranslation();
-	BodyMesh->SetRelativeLocation(HipsTranslationOffset);
+	//BodyMesh->SetRelativeLocation(HipsTranslationOffset);
 	UpdateBodyAnim();
 
 	//Consume movement input
@@ -144,6 +143,8 @@ void ABasePawn::UpdateBodyAnim()
 	AnimInstance->WristLeft = GetConvertedTransform(FName("hand_l")).Rotator();
 	AnimInstance->ElbowRight = GetConvertedTransform(FName("lowerarm_r")).Rotator();
 	AnimInstance->WristRight = GetConvertedTransform(FName("hand_r")).Rotator();
+
+	AnimInstance->HipLocationOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).GetTranslation() - KinectNeutralOffset.GetTranslation();
 }
 
 void ABasePawn::Grab(bool IsLeft)

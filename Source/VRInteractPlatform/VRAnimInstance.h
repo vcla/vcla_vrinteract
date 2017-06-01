@@ -35,6 +35,9 @@ public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
 		FVector RightElbowLocation;
 
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
+		FVector HipLocationOffset;
+
 #pragma region bonerotations
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Avateering")
 		FRotator SpineBase;
