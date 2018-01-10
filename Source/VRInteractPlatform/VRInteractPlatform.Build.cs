@@ -6,7 +6,7 @@ public class VRInteractPlatform : ModuleRules
 {
 	public VRInteractPlatform(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "KinectVCLA", "HeadMountedDisplay", "LeapMotion" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "KinectVCLA", "HeadMountedDisplay", "LeapMotion", "Sockets", "Networking"});
 
         //PrivateDependencyModuleNames.AddRange(new string[] { "KinectVCLA" });
 

@@ -7,14 +7,12 @@
 #include "KinectStructs.h"
 #include "BasePawn.generated.h"
 
-
-
 USTRUCT()
 struct FAvatarBoneInfo
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditDefaultsOnly, Category = "AvatarBoneInfo")
+	UPROPERTY(EditDefaultsOnly, Category = "AvatarBoneInfo")
 		FName AvatarBoneName = FName();
 
 	//Specific to a particular skeletal mesh, must be updated
@@ -74,6 +72,8 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	virtual void BeginDestroy() override;
+
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
@@ -86,6 +86,9 @@ public:
 	void Release(bool IsLeft);
 
 	//Update the body's animinstance, assumed to be VRAnimInstance
+	virtual void UpdateAnim();
+
+	virtual void UpdateMoveAnim();
 	virtual void UpdateBodyAnim();
 
 	//Pawn movement
@@ -95,16 +98,21 @@ public:
 	void ProcessRight(float AxisValue);
 	void ProcessRotate(float AxisValue);
 
-private:
-	//Distance between Kinect and user's hips when in neutral calibration pose
-	FTransform KinectNeutralOffset;
+protected:
+	float UpdateInterval;
 
-	//Default is attaching components instead of the whole actor to deal with actors w/ more than one mesh to grab
-	TMap<FName, FAvatarBoneInfo> BoneInfoMap;
 	TArray<UPrimitiveComponent*> LeftHandGrabbedComponents;
 	TArray<UPrimitiveComponent*> RightHandGrabbedComponents;
 
 	//AActors since direct array of interfaces is a pain. should never be not interfaces, but check for it anyways
 	TArray<AActor*> LeftHandCustomGrab; 
 	TArray<AActor*> RightHandCustomGrab;
+
+private:
+	//Distance between Kinect and user's hips when in neutral calibration pose
+	FTransform KinectNeutralOffset;
+
+	//Default is attaching components instead of the whole actor to deal with actors w/ more than one mesh to grab
+	TMap<FName, FAvatarBoneInfo> BoneInfoMap;
+	
 };

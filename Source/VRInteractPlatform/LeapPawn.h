@@ -8,7 +8,15 @@
 #include "LeapEventInterface.h"
 #include "HandObject.h"
 #include "BasePawn.h"
+
+#include <string>
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
 #include "LeapPawn.generated.h"
+
+using namespace rapidjson;
 
 /**
 * Pawn with leap motion used for fine control of the hands
@@ -26,6 +34,8 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
+	virtual void BeginDestroy() override;
+
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
@@ -54,8 +64,21 @@ public:
 
 	//Interaction functions and properties
 
+	virtual void UpdateAnim() override;
+
 	void FireGrabEvents(UHandObject* Hand);
 
 	void UpdateHandVariables();
 
+	void AnimRecord();
+
+private:
+
+	// Pose data record
+	bool PoseRecord;
+	FString PoseData;
+
+	bool LeftGrab, RightGrab, LeftRelease, RightRelease;
+
+	Document doc;
 };

@@ -15,6 +15,7 @@ ABasePawn::ABasePawn()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultSceneRoot"));
 
 	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BodyMesh"));
+	BodyMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	HeadMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HeadMesh"));
 
 	HeadOffset = CreateDefaultSubobject<USceneComponent>(TEXT("HeadOffset"));
@@ -28,6 +29,8 @@ ABasePawn::ABasePawn()
 
 	MovementSpeed = 150;
 	TurnSpeed = .1f;
+
+	UpdateInterval = .01f;
 }
 
 // Called when the game starts or when spawned
@@ -41,25 +44,24 @@ void ABasePawn::BeginPlay()
 	}
 }
 
+void ABasePawn::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+}
+
 // Called every frame
 void ABasePawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void ABasePawn::UpdateAnim()
+{
+	UpdateMoveAnim();
 	//Update Avatar animation
 	//BodyMesh->SetRelativeLocation(HipsTranslationOffset);
 	UpdateBodyAnim();
-
-	//Consume movement input
-	FRotator NewRotation = GetActorRotation();
-	NewRotation.Yaw += TurnSpeed * MovementInput.Z * DeltaTime;
-	SetActorRotation(NewRotation);
-	FVector DisplacementVector = FVector(0, 0, 0);
-	DisplacementVector = GetActorForwardVector() * MovementInput.X + GetActorRightVector() * MovementInput.Y;
-	DisplacementVector = DisplacementVector.GetSafeNormal();
-	DisplacementVector = MovementSpeed * DisplacementVector * DeltaTime;
-	FVector NewLocation = GetActorLocation() + DisplacementVector;
-	SetActorLocation(NewLocation);
 }
 
 void ABasePawn::CalibratePawn()
@@ -108,6 +110,20 @@ void ABasePawn::ProcessRotate(float AxisValue)
 	MovementInput.Z = AxisValue;
 }
 
+void ABasePawn::UpdateMoveAnim()
+{
+	//Consume movement input
+	FRotator NewRotation = GetActorRotation();
+	NewRotation.Yaw += TurnSpeed * MovementInput.Z * UpdateInterval; //DeltaTime;
+	SetActorRotation(NewRotation);
+	FVector DisplacementVector = FVector(0, 0, 0);
+	DisplacementVector = GetActorForwardVector() * MovementInput.X + GetActorRightVector() * MovementInput.Y;
+	DisplacementVector = DisplacementVector.GetSafeNormal();
+	DisplacementVector = MovementSpeed * DisplacementVector * UpdateInterval; //DeltaTime;
+	FVector NewLocation = GetActorLocation() + DisplacementVector;
+	SetActorLocation(NewLocation);
+}
+
 void ABasePawn::UpdateBodyAnim()
 {
 	if (!BodyMesh)
@@ -119,6 +135,7 @@ void ABasePawn::UpdateBodyAnim()
 
 	if (!AnimInstance)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("no bodymesh"));
 		return;
 	}
 
@@ -136,13 +153,13 @@ void ABasePawn::UpdateBodyAnim()
 
 	AnimInstance->LeftElbowLocation = GetConvertedTransform(FName("lowerarm_l")).GetLocation();
 	AnimInstance->RightElbowLocation = GetConvertedTransform(FName("lowerarm_r")).GetLocation();
-	AnimInstance->LeftHandLocation = GetConvertedTransform(FName("hand_l")).GetLocation();
-	AnimInstance->RightHandLocation = GetConvertedTransform(FName("hand_r")).GetLocation();
+	// AnimInstance->LeftHandLocation = GetConvertedTransform(FName("hand_l")).GetLocation();
+	// AnimInstance->RightHandLocation = GetConvertedTransform(FName("hand_r")).GetLocation();
 
-	AnimInstance->ElbowLeft = GetConvertedTransform(FName("lowerarm_l")).Rotator();
-	AnimInstance->WristLeft = GetConvertedTransform(FName("hand_l")).Rotator();
-	AnimInstance->ElbowRight = GetConvertedTransform(FName("lowerarm_r")).Rotator();
-	AnimInstance->WristRight = GetConvertedTransform(FName("hand_r")).Rotator();
+	// AnimInstance->ElbowLeft = GetConvertedTransform(FName("lowerarm_l")).Rotator();
+	// AnimInstance->WristLeft = GetConvertedTransform(FName("hand_l")).Rotator();
+	// AnimInstance->ElbowRight = GetConvertedTransform(FName("lowerarm_r")).Rotator();
+	// AnimInstance->WristRight = GetConvertedTransform(FName("hand_r")).Rotator();
 
 	AnimInstance->HipLocationOffset = UKinectFunctionLibrary::GetWorldJointTransform(EJoint::JointType_SpineBase).GetTranslation() - KinectNeutralOffset.GetTranslation();
 }
@@ -153,7 +170,7 @@ void ABasePawn::Grab(bool IsLeft)
 	UWorld* TheWorld = this->GetWorld();
 
 	FVector HandLocation = BodyMesh->GetSocketLocation(IsLeft ? LeftHandAttachPoint : RightHandAttachPoint);
-	DrawDebugSphere(TheWorld, HandLocation, 5.f, 8, FColor(255, 0, 0), true);
+	// DrawDebugSphere(TheWorld, HandLocation, 5.f, 8, FColor(255, 0, 0), true);
 
 	TArray<FHitResult> OutResults;
 	FCollisionShape GrabSphere = FCollisionShape::MakeSphere(5.f);
