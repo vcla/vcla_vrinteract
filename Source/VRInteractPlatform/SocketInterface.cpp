@@ -12,7 +12,7 @@ USocketInterface::USocketInterface(const class FObjectInitializer& ObjectInitial
 // Add default functionality here for any ISocketInterface functions that are not pure virtual.
 void ISocketInterface::SocketInit()
 {
-	FIPv4Endpoint Endpoint(FIPv4Address(192, 168, 1, 58), 10020);
+	FIPv4Endpoint Endpoint(FIPv4Address(192, 168, 1, 195), 10020);
     ListenerSocket = FTcpSocketBuilder(TEXT("TCPLISTENER"))
         .AsReusable()
         .BoundToEndpoint(Endpoint)

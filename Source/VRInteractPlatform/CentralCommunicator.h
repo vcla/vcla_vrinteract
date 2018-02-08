@@ -37,7 +37,7 @@ public:
 
     int32 OnTcpReceived(const uint8* Data, int32 BytesReceived);
 	
-    void OnTcpBuildListenerConnection();
+    void BuildListenerConnection();
 
 private:
 

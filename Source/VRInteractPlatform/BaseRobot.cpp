@@ -20,9 +20,9 @@ void ABaseRobot::BeginPlay()
 }
 
 // Called every frame
-void ABaseRobot::Tick( float DeltaTime )
+void ABaseRobot::Tick( float DeltaSeconds )
 {
-	Super::Tick( DeltaTime );
+	Super::Tick( DeltaSeconds );
 
 }
 

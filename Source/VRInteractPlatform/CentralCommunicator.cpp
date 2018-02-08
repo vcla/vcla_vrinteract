@@ -19,6 +19,8 @@ void ACentralCommunicator::BeginPlay()
 	
 	SocketInit();
 
+    BuildListenerConnection();
+
 	// Trace of Robots in level
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABaseRobot::StaticClass(), FoundActors);
@@ -43,7 +45,7 @@ void ACentralCommunicator::Tick( float DeltaTime )
 
 }
 
-void ACentralCommunicator::OnTcpBuildListenerConnection()
+void ACentralCommunicator::BuildListenerConnection()
 {
 	if (ListenerSocket != NULL) {
 
@@ -51,7 +53,7 @@ void ACentralCommunicator::OnTcpBuildListenerConnection()
         TcpListener->OnConnectionAccepted().BindUObject(this, &ACentralCommunicator::OnTcpListenerConnectionAccepted);
 
         if (TcpListener->Init()) {
-            // GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Initialize listener!")));
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Initialize listener!")));
             // We are now accepting clients.
             Accepting = true;
         }

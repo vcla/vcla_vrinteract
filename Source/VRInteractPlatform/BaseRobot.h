@@ -3,18 +3,14 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-
-#include <string>
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+#include "DocParser.h"
 
 #include "BaseRobot.generated.h"
 
 using namespace rapidjson;
 
 UCLASS()
-class VRINTERACTPLATFORM_API ABaseRobot : public AActor
+class VRINTERACTPLATFORM_API ABaseRobot : public AActor, public IDocParser
 {
 	GENERATED_BODY()
 	
@@ -32,7 +28,7 @@ public:
 
 	virtual void ParseRobotData();
 
-	virtual void RecvRobotData(std::string RobotData);
+	void RecvRobotData(std::string RobotData);
 
 protected:
 
